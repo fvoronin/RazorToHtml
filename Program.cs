@@ -8,6 +8,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.PlatformAbstractions;
 using Mvc.RenderViewToString;
 using System.IO;
+using Microsoft.Extensions.ObjectPool;
 
 namespace ConsoleApplication
 {
@@ -35,11 +36,12 @@ namespace ConsoleApplication
         {
             var applicationEnvironment = PlatformServices.Default.Application;
             services.AddSingleton(applicationEnvironment);
+            services.AddSingleton<ObjectPoolProvider, DefaultObjectPoolProvider>();
             var basePath = customApplicationBasePath ?? applicationEnvironment.ApplicationBasePath;
             services.AddSingleton<IHostingEnvironment>(new HostingEnvironment
             {
                 WebRootFileProvider = new PhysicalFileProvider(customApplicationBasePath ?? applicationEnvironment.ApplicationBasePath),
-                ApplicationName =  Path.GetFileName(basePath)
+                ApplicationName =  "RazorToHtml"
             });
             services.Configure<RazorViewEngineOptions>(options =>
             {
